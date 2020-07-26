@@ -1,4 +1,4 @@
-gitconst fs = require('fs');
+const fs = require('fs');
 
 //reading files
 // fs.readFile('./docs/blog1.txt', (err, data) => {
