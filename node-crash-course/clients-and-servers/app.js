@@ -8,8 +8,7 @@ const Blog = require('./models/blog');
 const app = express();
 
 //Connect to MongoDB
-// const dbURI = 'mongodb+srv://khedu:hellokhedu123@nodejstut.r3c79.mongodb.net/node-tuts?retryWrites=true&w=majority';
-const dbURI = 'mongodb://khedu:hellokhedu123@nodejstut-shard-00-00.r3c79.mongodb.net:27017,nodejstut-shard-00-01.r3c79.mongodb.net:27017,nodejstut-shard-00-02.r3c79.mongodb.net:27017/node-tuts?ssl=true&replicaSet=atlas-kgdhdv-shard-0&authSource=admin&retryWrites=true&w=majority';
+const dbURI = '<add your mongo db url here>';
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
 .then((result) => app.listen(3000))
 .catch((err) => console.log(err));
@@ -19,6 +18,7 @@ app.set('view engine', 'ejs');
 
 // middleware & static files
 app.use(express.static('public'));
+app.use(express.urlencoded( {extended: true}));
 app.use(morgan('dev'));
 
 //status consoles
@@ -51,6 +51,10 @@ app.get('/blogs', (req, res) => {
     .catch((err) => {
         console.log(err);
     });
+});
+
+app.post('/blogs', (req, res) => {
+    console.log(req.body);
 });
 
 app.get('/blogs/create', (req, res) => {
