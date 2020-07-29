@@ -21,72 +21,38 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(morgan('dev'));
 
-//mongoose and mongo sandbox routes
-app.get('/add-blog', (req, res) => {
-    const blog = new Blog({
-        title: 'new blog 2',
-        snippet: 'about my new blog 2',
-        body: 'more about my new blog 2'
-    });
-
-    blog.save()
-    .then((result) => {
-        res.send(result);
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-});
-
-app.get('/all-blogs', (req, res) => {
-    Blog.find()
-    .then((result) => {
-        res.send(result);
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-});
-
-app.get('/single-blog', (req, res) => {
-    Blog.findById('5f20fb5991141a34c3ff3e4a')
-    .then((result) => {
-        res.send(result);
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-});
-
-app.use((req, res, next) => {
-    console.log('\nnew request made:');
-    console.log('host: ', req.hostname);
-    console.log('path: ', req.path);
-    console.log('method: ', req.method);
-    next();
-});
-
-app.get('/', (req, res) => {
-    const blogs = [
-        {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.'},
-        {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.'},
-        {title: 'How to defeat bowser', snippet: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit.'},
-
-    ];
-    
-    res.render('index', {title: 'Home', blogs});
-});
-
+//status consoles
 // app.use((req, res, next) => {
-//     console.log('In the next Middleware:');
+//     console.log('\nnew request made:');
+//     console.log('host: ', req.hostname);
+//     console.log('path: ', req.path);
+//     console.log('method: ', req.method);
 //     next();
 // });
+
+
+//Below are all Routes and there handlers
+
+//basic routes
+app.get('/', (req, res) => {
+    res.redirect('/blogs');
+});
 
 app.get('/about', (req, res) => {
     res.render('about', {title: 'About'});
 });
 
-//handler for creat blog page view
+//blog routes
+app.get('/blogs', (req, res) => {
+    Blog.find().sort({createdAt: -1})
+    .then((result) => {
+        res.render('index', {title: 'All Blogs', blogs: result});
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+});
+
 app.get('/blogs/create', (req, res) => {
     res.render('create', {title: 'Create a new Blog'});
 })
